@@ -1,0 +1,6 @@
+[
+	{
+		"name": "web",
+		"description": "Open a browser, optionally to a specified URL or search query."
+	}
+]
