@@ -1,8 +1,4 @@
-'''Open a browser, optionally to a specified URL or search query.
-
-Usage:
-  web [<url>...]
-'''
+'''Open a browser, optionally to a specified URL or search query.'''
 import webbrowser
 import urllib
 
@@ -22,8 +18,15 @@ def is_valid_url(url):
 		r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 	return url is not None and regex.search(url)
 
-def run(shell, args):
-	url = ' '.join(args['<url>']) if args['<url>'] else 'https://www.google.com/'
-	if not is_valid_url(url):
-		url = 'https://www.google.com/#q={}'.format(urllib.quote(url, ''))
-	webbrowser.open(url)
+def _run(args):
+
+	@cli.cmd
+	@cli.cmd_arg('url', nargs='*', default='https://www.google.com/')
+	def web(url):
+		url = ' '.join(url)
+		if not is_valid_url(url):
+			url = 'https://www.google.com/#q={}'.format(urllib.quote(url, ''))
+		shell.out('Opening {}'.format(url))
+		webbrowser.open(url)
+
+	cli.run(args, main=web)
